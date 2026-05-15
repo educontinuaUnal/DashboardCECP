@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import {
   BarChart3,
   CalendarDays,
+  CheckCircle2,
   ChevronDown,
   CircleAlert,
   Clock3,
@@ -16,6 +17,34 @@ import { parseCSV } from './utils/csv.js';
 import { calculateCompletion, getYearSummary, normalizeIndicators } from './utils/indicators.js';
 
 const formatPercent = (value) => `${Math.round(value)}%`;
+
+function getIndicatorStatus(goals) {
+  if (goals.length === 0) {
+    return {
+      label: 'Sin metas',
+      detail: 'Pendiente',
+      tone: 'neutral'
+    };
+  }
+
+  const completions = goals.map((goal) => calculateCompletion(goal));
+  const allCompleted = completions.every((completion) => completion >= 100);
+  const hasProgress = completions.some((completion) => completion > 0);
+
+  if (allCompleted) {
+    return {
+      label: 'Cumplido',
+      detail: `${goals.length}/${goals.length} metas`,
+      tone: 'success'
+    };
+  }
+
+  return {
+    label: hasProgress ? 'En avance' : 'Pendiente',
+    detail: `${completions.filter((completion) => completion >= 100).length}/${goals.length} metas`,
+    tone: hasProgress ? 'progress' : 'neutral'
+  };
+}
 
 function ProgressBar({ goal, theme }) {
   const completion = calculateCompletion(goal);
@@ -40,11 +69,7 @@ function ProgressBar({ goal, theme }) {
 
 function IndicatorCard({ indicator, theme }) {
   const [open, setOpen] = useState(false);
-  const average =
-    indicator.goals.length === 0
-      ? 0
-      : indicator.goals.reduce((sum, goal) => sum + Math.min(100, calculateCompletion(goal)), 0) /
-        indicator.goals.length;
+  const status = getIndicatorStatus(indicator.goals);
 
   return (
     <article className="indicator-card">
@@ -55,8 +80,10 @@ function IndicatorCard({ indicator, theme }) {
           </span>
           <h3>{indicator.name}</h3>
         </div>
-        <div className="score-ring" style={{ borderColor: theme.accent, color: theme.text }}>
-          {formatPercent(average)}
+        <div className={`status-badge ${status.tone}`} style={{ '--status-accent': theme.accent }}>
+          <CheckCircle2 size={16} />
+          <span>{status.label}</span>
+          <small>{status.detail}</small>
         </div>
       </div>
 
