@@ -310,22 +310,33 @@ button {
   line-height: 1.35;
 }
 
-.status-badge {
+.score-ring {
   display: grid;
   place-items: center;
   align-items: center;
-  flex: 0 0 30px;
-  width: 30px;
-  height: 30px;
-  border: 1px solid color-mix(in srgb, var(--status-accent) 24%, white);
+  flex: 0 0 34px;
+  width: 34px;
+  height: 34px;
+  border: 1px solid color-mix(in srgb, var(--score-accent) 24%, white);
   border-radius: 50%;
-  background: color-mix(in srgb, var(--status-accent) 10%, white);
-  color: var(--status-accent);
-  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.06);
+  background: color-mix(in srgb, var(--score-accent) 8%, white);
+  color: var(--score-accent);
 }
 
-.status-badge svg {
+.score-ring svg {
   display: block;
+}
+
+.score-ring span {
+  color: var(--score-accent);
+  font-size: 0.76rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.score-ring.partial {
+  border-style: dashed;
+  background: #fff;
 }
 
 .purpose {

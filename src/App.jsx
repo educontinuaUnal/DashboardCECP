@@ -18,17 +18,29 @@ import { calculateCompletion, getYearSummary, normalizeIndicators } from './util
 
 const formatPercent = (value) => `${Math.round(value)}%`;
 
-function getIndicatorStatus(goals) {
+function getIndicatorScore(goals) {
   if (goals.length === 0) {
     return null;
   }
 
   const completions = goals.map((goal) => calculateCompletion(goal));
-  const allCompleted = completions.every((completion) => completion >= 100);
+  const completed = completions.filter((completion) => completion >= 100).length;
+  const allCompleted = completed === goals.length;
 
   if (allCompleted) {
     return {
-      tone: 'success'
+      type: 'done',
+      tone: 'success',
+      label: 'Cumplido'
+    };
+  }
+
+  if (goals.length > 1 && completed > 0) {
+    return {
+      type: 'ratio',
+      tone: 'partial',
+      label: `${completed}/${goals.length}`,
+      title: `${completed} de ${goals.length} metas cumplidas`
     };
   }
 
@@ -58,7 +70,7 @@ function ProgressBar({ goal, theme }) {
 
 function IndicatorCard({ indicator, theme }) {
   const [open, setOpen] = useState(false);
-  const status = getIndicatorStatus(indicator.goals);
+  const score = getIndicatorScore(indicator.goals);
 
   return (
     <article className="indicator-card">
@@ -69,9 +81,9 @@ function IndicatorCard({ indicator, theme }) {
           </span>
           <h3>{indicator.name}</h3>
         </div>
-        {status && (
-          <div className={`status-badge ${status.tone}`} style={{ '--status-accent': theme.accent }} title="Meta cumplida">
-            <Check size={13} strokeWidth={3} />
+        {score && (
+          <div className={`score-ring ${score.tone}`} style={{ '--score-accent': theme.accent }} title={score.title || score.label}>
+            {score.type === 'done' ? <Check size={13} strokeWidth={3} /> : <span>{score.label}</span>}
           </div>
         )}
       </div>
