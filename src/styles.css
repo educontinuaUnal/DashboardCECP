@@ -312,51 +312,20 @@ button {
 
 .status-badge {
   display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 2px 7px;
+  place-items: center;
   align-items: center;
-  flex: 0 0 auto;
-  min-width: 118px;
-  max-width: 138px;
-  padding: 8px 10px;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  background: #f9fafb;
-  color: #475569;
+  flex: 0 0 30px;
+  width: 30px;
+  height: 30px;
+  border: 1px solid color-mix(in srgb, var(--status-accent) 24%, white);
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--status-accent) 10%, white);
+  color: var(--status-accent);
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.06);
 }
 
 .status-badge svg {
-  grid-row: 1 / 3;
-}
-
-.status-badge span {
-  color: #111827;
-  font-size: 0.8rem;
-  font-weight: 900;
-  line-height: 1.1;
-}
-
-.status-badge small {
-  color: #64748b;
-  font-size: 0.68rem;
-  font-weight: 800;
-  line-height: 1.1;
-}
-
-.status-badge.success {
-  border-color: color-mix(in srgb, var(--status-accent) 28%, white);
-  background: color-mix(in srgb, var(--status-accent) 10%, white);
-  color: var(--status-accent);
-}
-
-.status-badge.success span {
-  color: var(--status-accent);
-}
-
-.status-badge.progress {
-  border-color: #bfdbfe;
-  background: #eff6ff;
-  color: #2563eb;
+  display: block;
 }
 
 .purpose {

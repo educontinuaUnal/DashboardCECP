@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import {
   BarChart3,
   CalendarDays,
-  CheckCircle2,
+  Check,
   ChevronDown,
   CircleAlert,
   Clock3,
@@ -20,30 +20,19 @@ const formatPercent = (value) => `${Math.round(value)}%`;
 
 function getIndicatorStatus(goals) {
   if (goals.length === 0) {
-    return {
-      label: 'Sin metas',
-      detail: 'Pendiente',
-      tone: 'neutral'
-    };
+    return null;
   }
 
   const completions = goals.map((goal) => calculateCompletion(goal));
   const allCompleted = completions.every((completion) => completion >= 100);
-  const hasProgress = completions.some((completion) => completion > 0);
 
   if (allCompleted) {
     return {
-      label: 'Cumplido',
-      detail: `${goals.length}/${goals.length} metas`,
       tone: 'success'
     };
   }
 
-  return {
-    label: hasProgress ? 'En avance' : 'Pendiente',
-    detail: `${completions.filter((completion) => completion >= 100).length}/${goals.length} metas`,
-    tone: hasProgress ? 'progress' : 'neutral'
-  };
+  return null;
 }
 
 function ProgressBar({ goal, theme }) {
@@ -80,11 +69,11 @@ function IndicatorCard({ indicator, theme }) {
           </span>
           <h3>{indicator.name}</h3>
         </div>
-        <div className={`status-badge ${status.tone}`} style={{ '--status-accent': theme.accent }}>
-          <CheckCircle2 size={16} />
-          <span>{status.label}</span>
-          <small>{status.detail}</small>
-        </div>
+        {status && (
+          <div className={`status-badge ${status.tone}`} style={{ '--status-accent': theme.accent }} title="Meta cumplida">
+            <Check size={13} strokeWidth={3} />
+          </div>
+        )}
       </div>
 
       <p className="purpose">{indicator.purpose || 'Objetivo del indicador no registrado.'}</p>
